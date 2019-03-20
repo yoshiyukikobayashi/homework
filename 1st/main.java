@@ -29,7 +29,7 @@ public class Main {
 
       // Bat first team
       System.out.println("=============================\n");
-      System.out.println(inning + "回表の攻撃、開始です！\n");
+      System.out.println(inning + "回表の" + team1.getName() +"の攻撃、開始です！\n");
       outCount1 = 0;
       runnerNumber1 = 0;
 
@@ -51,14 +51,21 @@ public class Main {
         if (currentBattingOrder1 > 9) currentBattingOrder1 = 1;
 
         if (outCount1 > 2) {
-          System.out.println(inning + "回表の攻撃、終了です！ " + team1.getScore() + " (" + team1.getName() + ") 対 " + team2.getScore() + "(" + team2.getName() + ") です！\n");
-          System.out.println("---------------------------\n");
+          System.out.println("\n" + inning + "回表の攻撃、終了です！ " + team1.getScore() + " (" + team1.getName() + ") 対 " + team2.getScore() + "(" + team2.getName() + ") です！\n");
           break;
         }
       }
 
+      if (inning == 9 && team1.getScore() < team2.getScore()) {
+        System.out.println("試合終了！ " + team1.getScore() + " 対 " + team2.getScore() + " で " + team2.getName() +"の勝利です！！！\n");
+        break;
+      }
+
+      System.out.println("---------------------------\n");
+
       // Field first team
-      System.out.println(inning + "回裏の攻撃、開始です！\n");
+
+      System.out.println(inning + "回裏の" + team2.getName() +"の攻撃、開始です！\n");
       outCount2 = 0;
       runnerNumber2 = 0;
 
@@ -69,6 +76,10 @@ public class Main {
           System.out.println(team2.getName() + "、ヒット！");
           if (runnerNumber2 > 3) {
             team2.setScore(1);
+            if (inning == 9 && team1.getScore() < team2.getScore()) {
+              System.out.println("\nサヨナラだ！！！！！ " + team1.getScore() + " 対 " + team2.getScore() + " で " + team2.getName() +"の勝利です！！！\n");
+              break;
+            }
             System.out.println(team2.getName() + "、1点追加！。合計" + team2.getScore() + "点です！");
           }
         } else {
@@ -80,11 +91,17 @@ public class Main {
         if (currentBattingOrder2 > 9) currentBattingOrder2 = 1;
 
         if (outCount2 > 2) {
-          System.out.println(inning + "回裏の攻撃、終了です！ " + team1.getScore() + " (" + team1.getName() + ") 対 " + team2.getScore() + "(" + team2.getName() + ") です！\n");
+          System.out.println("\n" + inning + "回裏の攻撃、終了です！ " + team1.getScore() + " (" + team1.getName() + ") 対 " + team2.getScore() + "(" + team2.getName() + ") です！\n");
           break;
         }
       }
       
+      if (inning == 9 && team1.getScore() == team2.getScore()) {
+        System.out.println("試合終了！ " + team1.getScore() + " 対 " + team2.getScore() + " で引き分けです！\n");
+      } else if (inning == 9 && team1.getScore() > team2.getScore()) {
+        System.out.println("試合終了！ " + team1.getScore() + " 対 " + team2.getScore() + " で " + team1.getName() +"の勝利です！！！\n");
+      }
+
       inning++;
 
     }
