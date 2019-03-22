@@ -144,6 +144,11 @@ public class Main {
 
         batting(player1[team1.getCurrentBattingOrder() - 1], team1);
 
+        if (team1.getScore() >= 5 && team2.getPitcherChanged() == 0) {
+          System.out.println(team2.getName() +"、ここでピッチャー交代！");
+          team2.setPitcherChanged(1);
+        }
+
         team1.setCurrentBattingOrder(team1.getCurrentBattingOrder() + 1);
         if (team1.getCurrentBattingOrder() > 9) team1.setCurrentBattingOrder(1);
 
@@ -172,6 +177,11 @@ public class Main {
         System.out.println("\n打順は" + team2.getCurrentBattingOrder() + "番です。");
 
         batting(player1[team2.getCurrentBattingOrder() - 1], team2);
+
+        if (team2.getScore() >= 5 && team1.getPitcherChanged() == 0) {
+          System.out.println(team1.getName() +"、ここでピッチャー交代！");
+          team1.setPitcherChanged(1);
+        }
 
         team2.setCurrentBattingOrder(team2.getCurrentBattingOrder() + 1);
         if (team2.getCurrentBattingOrder() > 9) team2.setCurrentBattingOrder(1);

@@ -7,6 +7,7 @@ public class Team {
   private int firstPosition = 0;  // 0 = No one on the first base, 1 = A player the first base.
   private int secondPosition = 0;   // 0 = No one on the second base, 1 = A player the second base.
   private int thirdPosition = 0;   // 0 = No one on the third base, 1 = A player the third base.
+  private int pitcherChanged = 0;  // 0 = Able to change pitcher, 1 = Not able to change pitcher.
 
   //constructor
 
@@ -37,6 +38,9 @@ public class Team {
   public int getThirdPosition() {
     return this.thirdPosition;
   }
+  public int getPitcherChanged() {
+    return this.pitcherChanged;
+  }
 
   public void setScore(int score) {
     this.score = score;
@@ -55,6 +59,9 @@ public class Team {
   }
   public void setThirdPosition(int thirdPosition) {
     this.thirdPosition = thirdPosition;
+  }
+  public void setPitcherChanged(int pitcherChanged) {
+    this.pitcherChanged = pitcherChanged;
   }
 
   // Methods
