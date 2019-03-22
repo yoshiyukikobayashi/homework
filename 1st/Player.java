@@ -22,7 +22,7 @@ public class Player {
 
   public int batting() {
     Random rnd = new Random();
-    return rnd.nextInt(2); // 0 = out, 1 = hit
+    return rnd.nextInt(16); // 0 - 8 = out, 9 - 11 = single hit, 12 - 13 = two base, 14 = three base, 15 = homerun
   }
 
 }

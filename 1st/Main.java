@@ -1,15 +1,123 @@
 public class Main {
 
+  public static void batting(Player player, Team team) {
+
+    int battingResult = player.batting();
+
+    switch (battingResult) {
+
+      case 0:
+      case 1:
+      case 2:
+      case 3:
+      case 4:
+      case 5:
+      case 6:
+      case 7:
+      case 8:
+        team.setOutCount(team.getOutCount() + 1);
+        System.out.println(team.getName() + "、アウト！　" + team.getOutCount() + "アウトです！");
+        break;
+
+      case 9:
+      case 10:
+      case 11:
+        System.out.println(team.getName() + "、ヒット！");
+        if (team.getThirdPosition() != 0) {
+          team.setScore(team.getScore() + 1);
+          team.setThirdPosition(0);
+          System.out.println("1点追加です！合計" + team.getScore() + "点です。");
+        } else if (team.getSecondPosition() != 0) {
+          team.setThirdPosition(1);
+          team.setSecondPosition(0);
+        } else if (team.getFirstPosition() != 0) {
+            team.setSecondPosition(1);
+            team.setFirstPosition(0);
+        }
+        team.setFirstPosition(1);
+        System.out.println("現在、" + team.returnRunners() + "です。");
+        break;
+
+      case 12:
+      case 13:
+        System.out.println(team.getName() + "、2ベースヒット！");
+        if (team.getThirdPosition() != 0 && team.getSecondPosition() != 0) {
+          team.setScore(team.getScore() + 2);
+          team.setThirdPosition(0);
+          team.setSecondPosition(0);
+          System.out.println("2点追加です！合計" + team.getScore() + "点です。");
+        } else if (team.getThirdPosition() != 0) {
+          team.setScore(team.getScore() + 1);
+          team.setThirdPosition(0);
+          System.out.println("1点追加です！合計" + team.getScore() + "点です。");
+        }else if (team.getSecondPosition() != 0) {
+          team.setScore(team.getScore() + 1);
+          team.setSecondPosition(0);
+          System.out.println("1点追加です！合計" + team.getScore() + "点です。");
+        } else if (team.getFirstPosition() != 0) {
+            team.setThirdPosition(1);
+            team.setFirstPosition(0);
+        }
+        team.setSecondPosition(1);
+        System.out.println("現在、" + team.returnRunners() + "です。");
+        break;
+
+      case 14:
+        System.out.println(team.getName() + "、3ベースヒット！");
+        if (team.getThirdPosition() != 0 && team.getSecondPosition() != 0 && team.getThirdPosition() != 0) {
+          team.setScore(team.getScore() + 3);
+          team.setThirdPosition(0);
+          team.setSecondPosition(0);
+          team.setThirdPosition(0);
+          System.out.println("3点追加です！合計" + team.getScore() + "点です。");
+        } else if (team.getThirdPosition() != 0 && team.getSecondPosition() != 0) {
+          team.setScore(team.getScore() + 2);
+          team.setThirdPosition(0);
+          team.setSecondPosition(0);
+          System.out.println("2点追加です！合計" + team.getScore() + "点です。");
+        }else if (team.getThirdPosition() != 0 && team.getFirstPosition() != 0) {
+          team.setScore(team.getScore() + 2);
+          team.setThirdPosition(0);
+          team.setFirstPosition(0);
+          System.out.println("2点追加です！合計" + team.getScore() + "点です。");
+        } else if (team.getSecondPosition() != 0 && team.getFirstPosition() != 0) {
+          team.setScore(team.getScore() + 2);
+          team.setSecondPosition(0);
+          team.setFirstPosition(0);
+          System.out.println("2点追加です！合計" + team.getScore() + "点です。");
+        }else if (team.getThirdPosition() != 0) {
+          team.setScore(team.getScore() + 1);
+          team.setThirdPosition(0);
+          System.out.println("1点追加です！合計" + team.getScore() + "点です。");
+        }else if (team.getSecondPosition() != 0) {
+          team.setScore(team.getScore() + 1);
+          team.setSecondPosition(0);
+          System.out.println("1点追加です！合計" + team.getScore() + "点です。");
+        } else if (team.getFirstPosition() != 0) {
+          team.setScore(team.getScore() + 1);
+          team.setFirstPosition(0);
+          System.out.println("1点追加です！合計" + team.getScore() + "点です。");
+        }
+        team.setThirdPosition(1);
+        System.out.println("現在、" + team.returnRunners() + "です。");
+        break;
+
+      case 15:
+        System.out.println(team.getName() + "、ホームラン！！！");
+        int total = 1 + team.getRunnerNumber();
+        team.setScore(team.getScore() + total);
+        System.out.println(total + "点追加です！合計" + team.getScore() + "点です。");
+        team.setThirdPosition(0);
+        team.setSecondPosition(0);
+        team.setFirstPosition(0);
+        break;
+    }
+  }
+
   public static void main(String[] args) {
 
     int inning = 1;
-    int currentBattingOrder1 = 1;
-    int currentBattingOrder2 = 1;
-    int outCount1 = 0;
-    int outCount2 = 0;
-    int runnerNumber1 = 0;
-    int runnerNumber2 = 0;
-
+    
     Team team1 = new Team("Swallows");
     Team team2 = new Team("Tigars");
     
@@ -29,29 +137,22 @@ public class Main {
 
       // Bat first team
       System.out.println("=============================\n");
-      System.out.println(inning + "回表の" + team1.getName() +"の攻撃、開始です！\n");
-      outCount1 = 0;
-      runnerNumber1 = 0;
-
+      System.out.println(inning + "回表の" + team1.getName() +"の攻撃、開始です！");
+      
       while (true) {
-        System.out.println("打順は" + currentBattingOrder1 + "番です。");
-        if (player1[currentBattingOrder1-1].batting() > 0) {
-          runnerNumber1++;
-          System.out.println(team1.getName() + "、ヒット！");
-          if (runnerNumber1 > 3) {
-            team1.setScore(1);
-            System.out.println(team1.getName() + "、1点追加！。合計" + team1.getScore() + "点です！");
-          }
-        } else {
-          outCount1++;
-          System.out.println(team1.getName() + "、アウト！　" + outCount1 + "アウトです！");
-        }
+        System.out.println("\n打順は" + team1.getCurrentBattingOrder() + "番です。");
 
-        currentBattingOrder1++;
-        if (currentBattingOrder1 > 9) currentBattingOrder1 = 1;
+        batting(player1[team1.getCurrentBattingOrder() - 1], team1);
 
-        if (outCount1 > 2) {
+        team1.setCurrentBattingOrder(team1.getCurrentBattingOrder() + 1);
+        if (team1.getCurrentBattingOrder() > 9) team1.setCurrentBattingOrder(1);
+
+        if (team1.getOutCount() > 2) {
           System.out.println("\n" + inning + "回表の攻撃、終了です！ " + team1.getScore() + " (" + team1.getName() + ") 対 " + team2.getScore() + "(" + team2.getName() + ") です！\n");
+          team1.setOutCount(0);
+          team1.setThirdPosition(0);
+          team1.setSecondPosition(0);
+          team1.setFirstPosition(0);
           break;
         }
       }
@@ -66,32 +167,21 @@ public class Main {
       // Field first team
 
       System.out.println(inning + "回裏の" + team2.getName() +"の攻撃、開始です！\n");
-      outCount2 = 0;
-      runnerNumber2 = 0;
 
       while (true) {
-        System.out.println("打順は" + currentBattingOrder2 + "番です。");
-        if (player2[currentBattingOrder2-1].batting() > 0) {
-          runnerNumber2++;
-          System.out.println(team2.getName() + "、ヒット！");
-          if (runnerNumber2 > 3) {
-            team2.setScore(1);
-            if (inning == 9 && team1.getScore() < team2.getScore()) {
-              System.out.println("\nサヨナラだ！！！！！ " + team1.getScore() + " 対 " + team2.getScore() + " で " + team2.getName() +"の勝利です！！！\n");
-              break;
-            }
-            System.out.println(team2.getName() + "、1点追加！。合計" + team2.getScore() + "点です！");
-          }
-        } else {
-          outCount2++;
-          System.out.println(team2.getName() + "、アウト！　" + outCount2 + "アウトです！");
-        }
+        System.out.println("\n打順は" + team2.getCurrentBattingOrder() + "番です。");
 
-        currentBattingOrder2++;
-        if (currentBattingOrder2 > 9) currentBattingOrder2 = 1;
+        batting(player1[team2.getCurrentBattingOrder() - 1], team2);
 
-        if (outCount2 > 2) {
-          System.out.println("\n" + inning + "回裏の攻撃、終了です！ " + team1.getScore() + " (" + team1.getName() + ") 対 " + team2.getScore() + "(" + team2.getName() + ") です！\n");
+        team2.setCurrentBattingOrder(team2.getCurrentBattingOrder() + 1);
+        if (team2.getCurrentBattingOrder() > 9) team2.setCurrentBattingOrder(1);
+
+        if (team2.getOutCount() > 2) {
+          System.out.println("\n" + inning + "回裏の攻撃、終了です！ " + team1.getScore() + " (" + team2.getName() + ") 対 " + team2.getScore() + "(" + team2.getName() + ") です！\n");
+          team2.setOutCount(0);
+          team2.setThirdPosition(0);
+          team2.setSecondPosition(0);
+          team2.setFirstPosition(0);
           break;
         }
       }
