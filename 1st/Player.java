@@ -2,13 +2,11 @@ import java.util.Random;
 
 public class Player {
 
-  private Team team;
   private int battingOrder;
 
   // constructor
 
-  Player(Team team, int battingOrder) {
-    this.team = team;
+  Player(int battingOrder) {
     this.battingOrder = battingOrder;
   }
 
@@ -22,7 +20,7 @@ public class Player {
 
   public int batting() {
     Random rnd = new Random();
-    return rnd.nextInt(16); // 0 - 8 = out, 9 - 11 = single hit, 12 - 13 = two base, 14 = three base, 15 = homerun
+    return rnd.nextInt(21); // 0 - 8, 16 - 20 = out, 9 - 11 = single hit, 12 - 13 = two base, 14 = three base, 15 = homerun
   }
 
 }

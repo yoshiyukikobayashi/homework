@@ -1,4 +1,4 @@
-public class Team {
+public class Team implements Comparable<Team> {
 
   private String name;
   private int score = 0;
@@ -8,11 +8,21 @@ public class Team {
   private int secondPosition = 0;   // 0 = No one on the second base, 1 = A player the second base.
   private int thirdPosition = 0;   // 0 = No one on the third base, 1 = A player the third base.
   private int pitcherChanged = 0;  // 0 = Able to change pitcher, 1 = Not able to change pitcher.
+  private int numberOfWin = 0;
+  private int numberOfLose = 0;
+  private int numberOfDraw = 0;
+  private double winningPercentage = 0;
+  private double gameDistance = 0;
+
+  public Player[] player = new Player[9];
 
   //constructor
 
   Team(String name) {
     this.name = name;
+    for (int i = 0; i < 9; i++) {
+      player[i] = new Player(i);
+    }
   }
 
   // getter and setter
@@ -40,6 +50,21 @@ public class Team {
   }
   public int getPitcherChanged() {
     return this.pitcherChanged;
+  }
+  public int getNumberOfWin() {
+    return this.numberOfWin;
+  }
+  public int getNumberOfLose() {
+    return this.numberOfLose;
+  }
+  public int getNumberOfDraw() {
+    return this.numberOfDraw;
+  }
+  public double getWinningPercentage() {
+    return this.winningPercentage;
+  }
+  public double getGameDistance() {
+    return this.gameDistance;
   }
 
   public void setScore(int score) {
@@ -88,6 +113,45 @@ public class Team {
 
   public int getRunnerNumber() {
     return this.firstPosition + this.secondPosition + this.thirdPosition;
+  }
+
+  public void setNumberOfWin() {
+    this.numberOfWin++;
+  }
+
+  public void setNumberOfLose() {
+    this.numberOfLose++;
+  }
+
+  public void setNumberOfDraw() {
+    this.numberOfDraw++;
+  }
+
+  public void setWinningPercentage() {
+    this.winningPercentage = (double)this.numberOfWin / (this.numberOfWin + this.numberOfLose + this.numberOfDraw);
+  }
+
+  public void setGameDistance(Team team) {
+    this.gameDistance = ((team.getNumberOfWin() - team.getNumberOfLose()) - (double)(this.numberOfWin - this.numberOfLose)) / 2;
+  }
+
+  public void setGameDistanceZero() {
+    this.gameDistance = 0;
+  }
+
+  public void initialize() {
+    this.score = 0;
+    this.currentBattingOrder = 1;
+    this.outCount = 0;
+    this.firstPosition = 0;
+    this.secondPosition = 0;
+    this.thirdPosition = 0;
+    this.pitcherChanged = 0;
+  }
+
+  @Override
+  public int compareTo(Team team) {
+    return (int)(team.getWinningPercentage() * 100000) - (int)(this.winningPercentage * 100000);
   }
 
 }
