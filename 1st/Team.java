@@ -13,10 +13,18 @@ public class Team implements Comparable<Team> {
   private int numberOfDraw = 0;
   private double winningPercentage = 0;
   private double gameDistance = 0;
+  private int kouryuuFlag = 0;
+
+  // 交流戦用
+  private int numberOfWinKou = 0;
+  private int numberOfLoseKou = 0;
+  private int numberOfDrawKou = 0;
+  private double winningPercentageKou = 0;
+  private double gameDistanceKou = 0;
 
   public Player[] player = new Player[9];
 
-  //constructor
+  // constructor
 
   Team(String name) {
     this.name = name;
@@ -65,6 +73,21 @@ public class Team implements Comparable<Team> {
   }
   public double getGameDistance() {
     return this.gameDistance;
+  }
+  public int getNumberOfWinKou() {
+    return this.numberOfWinKou;
+  }
+  public int getNumberOfLoseKou() {
+    return this.numberOfLoseKou;
+  }
+  public int getNumberOfDrawKou() {
+    return this.numberOfDrawKou;
+  }
+  public double getWinningPercentageKou() {
+    return this.winningPercentageKou;
+  }
+  public double getGameDistanceKou() {
+    return this.gameDistanceKou;
   }
 
   public void setScore(int score) {
@@ -118,25 +141,50 @@ public class Team implements Comparable<Team> {
   public void setNumberOfWin() {
     this.numberOfWin++;
   }
+  public void setNumberOfWinKou() {
+    this.numberOfWinKou++;
+  }
 
   public void setNumberOfLose() {
     this.numberOfLose++;
+  }
+  public void setNumberOfLoseKou() {
+    this.numberOfLoseKou++;
   }
 
   public void setNumberOfDraw() {
     this.numberOfDraw++;
   }
+  public void setNumberOfDrawKou() {
+    this.numberOfDrawKou++;
+  }
 
   public void setWinningPercentage() {
     this.winningPercentage = (double)this.numberOfWin / (this.numberOfWin + this.numberOfLose + this.numberOfDraw);
+  }
+  public void setWinningPercentageKou() {
+    this.winningPercentageKou = (double)this.numberOfWinKou / (this.numberOfWinKou + this.numberOfLoseKou + this.numberOfDrawKou);
   }
 
   public void setGameDistance(Team team) {
     this.gameDistance = ((team.getNumberOfWin() - team.getNumberOfLose()) - (double)(this.numberOfWin - this.numberOfLose)) / 2;
   }
+  public void setGameDistanceKou(Team team) {
+    this.gameDistanceKou = ((team.getNumberOfWinKou() - team.getNumberOfLoseKou()) - (double)(this.numberOfWinKou - this.numberOfLoseKou)) / 2;
+  }
 
   public void setGameDistanceZero() {
     this.gameDistance = 0;
+  }
+  public void setGameDistanceZeroKou() {
+    this.gameDistanceKou = 0;
+  }
+
+  public void setKouryuuFlag() {
+    this.kouryuuFlag = 1;
+  }
+  public void unsetKouryuuFlag() {
+    this.kouryuuFlag = 0;
   }
 
   public void initialize() {
@@ -151,7 +199,11 @@ public class Team implements Comparable<Team> {
 
   @Override
   public int compareTo(Team team) {
-    return (int)(team.getWinningPercentage() * 100000) - (int)(this.winningPercentage * 100000);
+    if (this.kouryuuFlag == 0) {
+      return (int)(team.getWinningPercentage() * 100000) - (int)(this.winningPercentage * 100000);
+    } else {
+      return (int)(team.getWinningPercentageKou() * 100000) - (int)(this.winningPercentageKou * 100000);
+    }
   }
 
 }
