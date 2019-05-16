@@ -12,6 +12,7 @@ public class Team implements Comparable<Team> {
   private int numberOfLose = 0;
   private int numberOfDraw = 0;
   private double winningPercentage = 0;
+  private int order = 0;
   private double gameDistance = 0;
   private int kouryuuFlag = 0;
 
@@ -71,6 +72,9 @@ public class Team implements Comparable<Team> {
   public double getWinningPercentage() {
     return this.winningPercentage;
   }
+  public int getOrder() {
+	    return this.order;
+  }
   public double getGameDistance() {
     return this.gameDistance;
   }
@@ -110,6 +114,9 @@ public class Team implements Comparable<Team> {
   }
   public void setPitcherChanged(int pitcherChanged) {
     this.pitcherChanged = pitcherChanged;
+  }
+  public void setOrder(int order) {
+	    this.order = order;
   }
 
   // Methods

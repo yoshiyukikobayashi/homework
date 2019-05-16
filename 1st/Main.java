@@ -1,7 +1,57 @@
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+//import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
 
 public class Main {
+
+  public static void updateOrderToDb(Team[] team) throws Exception {
+
+	  String sql = "update seleague set numberofwin=?, numberoflose=?, numberofdraw=?, winningpercentage=?, rank=? where name = ?;";
+	  try (
+              Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/penant", // "jdbc:postgresql://<場所>:<ポート>/<データベース名>"
+                      "postgres", //user
+                      "password"); //password;
+              Statement statement = connection.createStatement();
+			  PreparedStatement ps = connection.prepareStatement(sql);
+              ){
+		  	  for (int i = 0;i < 6;i++) {
+		          ps.setString(6, team[i].getName());
+		          ps.setInt(1, team[i].getNumberOfWin());
+		          ps.setInt(2, team[i].getNumberOfLose());
+		          ps.setInt(3, team[i].getNumberOfDraw());
+		          ps.setDouble(4, team[i].getWinningPercentage());
+		          ps.setInt(5, team[i].getOrder());
+		          ps.execute();
+		  	  }
+	  	}
+  }
+
+  public static void saveOrderToDb(Team[] team) throws Exception {
+
+	  String sql = "insert into seleague(id,name,numberofwin,numberoflose,numberofdraw,winningpercentage,rank)values(?,?,?,?,?,?,?);";
+	  try (
+              Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/penant", // "jdbc:postgresql://<場所>:<ポート>/<データベース名>"
+                      "postgres", //user
+                      "password"); //password;
+              Statement statement = connection.createStatement();
+			  PreparedStatement ps = connection.prepareStatement(sql);
+              ){
+		  	  for (int i = 0;i < 6;i++) {
+		  		  ps.setInt(1, i+1);
+		          ps.setString(2, team[i].getName());
+		          ps.setInt(3, team[i].getNumberOfWin());
+		          ps.setInt(4, team[i].getNumberOfLose());
+		          ps.setInt(5, team[i].getNumberOfDraw());
+		          ps.setDouble(6, team[i].getWinningPercentage());
+		          ps.setInt(7, team[i].getOrder());
+		          ps.execute();
+		  	  }
+	  	}
+  }
 
   public static int batting(Player player, Team teamAttak, Team teamDefense, int inning, int uraFlag) {
 
@@ -176,7 +226,7 @@ public class Main {
     int inning = 1;
     int uraFlag = 0; // 0 = 表, 1 = 裏
     int sayonaraFlag = 0; // 0 = サヨナラではない、1 = サヨナラ
-        
+
     System.out.println(team1.getName() + " vs " + team2.getName() + "、先行は" + team1.getName() + "でプレイボール!!!\n");
 
     while (inning < 13) {
@@ -185,12 +235,12 @@ public class Main {
       System.out.println("=============================\n");
       uraFlag = 0;
       System.out.println(inning + "回表の" + team1.getName() +"の攻撃、開始です！");
-      
+
       while (true) {
         System.out.println("\n打順は" + team1.getCurrentBattingOrder() + "番です。");
 
         batting(team1.player[team1.getCurrentBattingOrder() - 1], team1, team2, inning, uraFlag);
-        
+
         if (team1.getScore() >= 5 && team2.getPitcherChanged() == 0) {
           System.out.println(team2.getName() +"、ここでピッチャー交代！");
           team2.setPitcherChanged(1);
@@ -320,14 +370,14 @@ public class Main {
         team2.initialize();
         break;
       }
-      
+
       inning++;
 
     }
     return 3;
   }
 
-  public static void showTeamScores(Team[] team, int day, int spFlag, int kouryuuFlag) {  // spFlag == 0 はセリーグ、spFlag == 6 はパリーグ
+  public static void showTeamScores(Team[] team, int day, int spFlag, int kouryuuFlag) throws Exception {  // spFlag == 0 はセリーグ、spFlag == 6 はパリーグ
     ArrayList<Team> order = new ArrayList<Team>();                                        // kouryuuFlag == 0 は通常試合、kouryuuFlag == 1 は交流戦
     if (kouryuuFlag == 0) {
       for (int i = 0 + spFlag; i < 6 + spFlag; i++) {
@@ -335,11 +385,17 @@ public class Main {
       }
       Collections.sort(order);
       order.get(0).setGameDistanceZero();
+      order.get(0).setOrder(1);
       order.get(1).setGameDistance(order.get(0));
+      order.get(1).setOrder(2);
       order.get(2).setGameDistance(order.get(1));
+      order.get(2).setOrder(3);
       order.get(3).setGameDistance(order.get(2));
+      order.get(3).setOrder(4);
       order.get(4).setGameDistance(order.get(3));
+      order.get(4).setOrder(5);
       order.get(5).setGameDistance(order.get(4));
+      order.get(5).setOrder(6);
     } else {
       for (int i = 0; i < 12; i++) {
         team[i].setKouryuuFlag();
@@ -362,7 +418,7 @@ public class Main {
         team[i].unsetKouryuuFlag();
       }
     }
-        
+
     if (kouryuuFlag == 1) {
       if (day == 140 && order.get(0).getWinningPercentageKou() == order.get(1).getWinningPercentageKou()) {
         System.out.println("\n交流戦の結果です！！！　優勝は、同率首位で、" + order.get(0).getName() + "と" + order.get(1).getName() + "です！\n");
@@ -389,7 +445,7 @@ public class Main {
       System.out.println("12位　" + order.get(11).getName() + "　　" + order.get(11).getNumberOfWinKou() + "　　　" + order.get(11).getNumberOfLoseKou() + "　　　　" + order.get(11).getNumberOfDrawKou() + "　　　" + String.format("%.3f", order.get(11).getWinningPercentageKou()) + "　　" + order.get(11).getGameDistanceKou());
       System.out.println("★★★★成績発表★★★★\n");
       return;
-    } 
+    }
 
     if (day == 140 && order.get(0).getWinningPercentage() == order.get(1).getWinningPercentage() && order.get(0).getNumberOfWin() == order.get(1).getNumberOfWin()) {
       System.out.println("\n全日程終了！！！　上位2チームが同率・同勝利数のため、優勝決定戦で勝利したチームが優勝とします。");
@@ -413,6 +469,7 @@ public class Main {
         System.out.println("５位　" + order.get(4).getName() + "　　" + order.get(4).getNumberOfWin() + "　　　" + order.get(4).getNumberOfLose() + "　　　　" + order.get(4).getNumberOfDraw() + "　　　" + String.format("%.3f", order.get(4).getWinningPercentage()) + "　　" + order.get(4).getGameDistance());
         System.out.println("６位　" + order.get(5).getName() + "　　" + order.get(5).getNumberOfWin() + "　　　" + order.get(5).getNumberOfLose() + "　　　　" + order.get(5).getNumberOfDraw() + "　　　" + String.format("%.3f", order.get(5).getWinningPercentage()) + "　　" + order.get(5).getGameDistance());
         System.out.println("★★★★成績発表★★★★\n");
+        updateOrderToDb(team);
         return;
       }
     } else if (day == 140 && order.get(0).getWinningPercentage() == order.get(1).getWinningPercentage()) {
@@ -429,6 +486,7 @@ public class Main {
         System.out.println("５位　" + order.get(4).getName() + "　　" + order.get(4).getNumberOfWin() + "　　　" + order.get(4).getNumberOfLose() + "　　　　" + order.get(4).getNumberOfDraw() + "　　　" + String.format("%.3f", order.get(4).getWinningPercentage()) + "　　" + order.get(4).getGameDistance());
         System.out.println("６位　" + order.get(5).getName() + "　　" + order.get(5).getNumberOfWin() + "　　　" + order.get(5).getNumberOfLose() + "　　　　" + order.get(5).getNumberOfDraw() + "　　　" + String.format("%.3f", order.get(5).getWinningPercentage()) + "　　" + order.get(5).getGameDistance());
         System.out.println("★★★★成績発表★★★★\n");
+        updateOrderToDb(team);
         return;
       }
     } else if (day == 140) {
@@ -443,14 +501,15 @@ public class Main {
     System.out.println("５位　" + order.get(4).getName() + "　　" + order.get(4).getNumberOfWin() + "　　　" + order.get(4).getNumberOfLose() + "　　　　" + order.get(4).getNumberOfDraw() + "　　　" + String.format("%.3f", order.get(4).getWinningPercentage()) + "　　" + order.get(4).getGameDistance());
     System.out.println("６位　" + order.get(5).getName() + "　　" + order.get(5).getNumberOfWin() + "　　　" + order.get(5).getNumberOfLose() + "　　　　" + order.get(5).getNumberOfDraw() + "　　　" + String.format("%.3f", order.get(5).getWinningPercentage()) + "　　" + order.get(5).getGameDistance());
     System.out.println("★★★★成績発表★★★★\n");
+    updateOrderToDb(team);
   }
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws Exception {
 
     // 0:Swallows, 1:Tigers, 2:Giants, 3:Baystars, 4:Carp, 5:Dragons
     // 6:Softbank, 7:Fighters, 8:Lotte, 9:Lions, 10:Orix, 11:Rakuten
     Team[] team = new Team[12];
-    
+
     for (int i = 0; i < 12; i++) {
       if (i == 0) team[i] = new Team("Swallows");
       if (i == 1) team[i] = new Team("Tigers  ");
@@ -466,6 +525,7 @@ public class Main {
       if (i == 11) team[i] = new Team("Rakuten ");
     }
 
+//    saveOrderToDb(team);
     int day = 1;
 
     while (day < 141) {
@@ -561,11 +621,12 @@ public class Main {
       showTeamScores(team, day, 0, 0);
       if (day == 140) System.out.print("パリーグ、");
       showTeamScores(team, day, 6, 0);
-     
+
       day++;
     }
 
-    
+
+
 
   }
 
