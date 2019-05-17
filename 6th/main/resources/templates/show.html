@@ -1,0 +1,21 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+<table border="1">
+	<tr>
+		<th>チーム名</th><th>勝ち数</th><th>負け数</th><th>引き分け数</th><th>勝率</th><th>順位</th>
+	</tr>
+	<tr th:each="obj : ${list}">
+		<td th:text="${obj.name}"></td>
+  		<td th:text="${obj.numberofwin}"></td>
+		<td th:text="${obj.numberoflose}"></td>
+		<td th:text="${obj.numberofdraw}"></td>
+		<td th:text="${obj.winningpercentage}"></td>
+		<td th:text="${obj.rank}"></td>
+	</tr>
+</table>
+<input type="button" onclick="location.href='./'" value="戻る"></input>
+</body>
+</html>
